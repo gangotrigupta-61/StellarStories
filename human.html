@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>When the Sun Talks — Animated Story</title>
+<style>
+/* ===== Reset + Base Styles ===== */
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: "Poppins", Arial, sans-serif;
+  background: linear-gradient(180deg, #06102a, #0e1a3a);
+  color: #fff;
+}
+
+/* ===== Layout ===== */
+.container {
+  max-width: 1100px;
+  margin: 20px auto;
+  padding: 18px;
+}
+
+header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+h1 {
+  margin: 0;
+  font-size: 1.6rem;
+  color: #ffd24a;
+}
+
+.meta {
+  font-size: 0.9rem;
+  color: rgba(255,255,255,0.7);
+}
+
+/* ===== Player ===== */
+.player {
+  margin-top: 14px;
+  background: rgba(255,255,255,0.06);
+  border-radius: 14px;
+  padding: 12px;
+  box-shadow: 0 6px 30px rgba(0,0,0,0.6);
+}
+
+.stage {
+  position: relative;
+  width: 100%;
+  height: 520px;
+  border-radius: 10px;
+  background: radial-gradient(circle at 20% 10%, rgba(255,220,120,0.06), transparent 8%),
+              linear-gradient(180deg, rgba(0,0,0,0.15), rgba(0,0,0,0.35));
+  overflow: hidden;
+}
+
+canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* ===== Overlay ===== */
+.overlay {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.subtitle {
+  background: rgba(0,0,0,0.5);
+  color: #fff;
+  padding: 10px 12px;
+  border-radius: 10px;
+  font-size: 1.05rem;
+  text-align: center;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.6);
+}
+
+/* ===== Controls ===== */
+.controls {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 6px;
+  flex-wrap: wrap;
+}
+
+.btn {
+  background: #ffd24a;
+  color: #000;
+  border: none;
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn.secondary {
+  background: transparent;
+  color: rgba(255,255,255,0.7);
+  border: 1px solid rgba(255,255,255,0.2);
+}
+
+/* ===== Perspective ===== */
+.perspective-box {
+  margin-top: 18px;
+  background: rgba(255,255,255,0.04);
+  border-radius: 12px;
+  padding: 14px;
+  text-align: center;
+}
+
+.perspective-title {
+  color: #ffd24a;
+  font-weight: 600;
+  font-size: 1.05rem;
+  margin-bottom: 10px;
+}
+
+.perspective-options {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.perspective-btn {
+  background: transparent;
+  border: 2px solid #ffd24a;
+  color: #ffd24a;
+  border-radius: 10px;
+  padding: 8px 14px;
+  cursor: pointer;
+  transition: 0.3s;
+  font-weight: 600;
+}
+
+.perspective-btn:hover,
+.perspective-btn.active {
+  background: #ffd24a;
+  color: #000;
+}
+
+/* ===== Script Area ===== */
+.script-area {
+  margin-top: 16px;
+  background: rgba(255,255,255,0.02);
+  padding: 12px;
+  border-radius: 10px;
+  font-size: 0.95rem;
+}
+
+/* ===== Footer ===== */
+footer {
+  margin-top: 12px;
+  color: rgba(255,255,255,0.7);
+  text-align: center;
+  font-size: 0.85rem;
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <h1>When the Sun Talks ✨ — Animated Story</h1>
+    <div class="meta">Duration: ~2m20s · Interactive animated “video”</div>
+  </header>
+
+  <div class="player">
+    <div class="stage" id="stage">
+      <canvas id="scene"></canvas>
+      <div class="overlay">
+        <div class="subtitle" id="subtitle">Press Play to start the story — the Sun might sneeze!</div>
+        <div class="controls">
+          <button class="btn" id="playBtn">▶ Play</button>
+          <button class="btn secondary" id="pauseBtn">Pause</button>
+          <button class="btn secondary" id="restartBtn">Restart</button>
+          <label>
+            <input type="checkbox" id="ttsToggle" checked> Narration (speech)
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <div class="perspective-box">
+      <div class="perspective-title">Choose Perspective:</div>
+      <div class="perspective-options">
+        <button class="perspective-btn active" data-perspective="default">👩‍🏫 Narrator</button>
+        <button class="perspective-btn" data-perspective="pilot">✈️ Pilot</button>
+        <button class="perspective-btn" data-perspective="astronaut">👨‍🚀 Astronaut</button>
+        <button class="perspective-btn" data-perspective="farmer">🌾 Farmer</button>
+      </div>
+    </div>
+
+    <div class="script-area">
+      <strong>Story Script:</strong>
+      <ol>
+        <li>Intro: Aanya greets — Sun speaks.</li>
+        <li>Sun sneezes — a solar storm begins.</li>
+        <li>Plane trouble — Pilot Arjun’s radio crackles.</li>
+        <li>Aurora — the sky glows green and purple.</li>
+        <li>Scientists — work to protect satellites.</li>
+        <li>Happy ending — teamwork saves the day.</li>
+      </ol>
+    </div>
+  </div>
+
+  <footer>
+    Images: NASA / Wikimedia Commons. Educational demo only.
+  </footer>
+</div>
+
+<script>
+const canvas = document.getElementById("scene");
+const ctx = canvas.getContext("2d");
+canvas.width = canvas.clientWidth;
+canvas.height = canvas.clientHeight;
+
+const subtitleBox = document.getElementById("subtitle");
+const ttsToggle = document.getElementById("ttsToggle");
+const synth = window.speechSynthesis;
+let currentPerspective = "default";
+
+const scenes = [
+  { text: "Hi, I’m Aanya! One day I heard a golden voice whisper from the Sun..." },
+  { text: "Aaaachooo! The Sun sneezed — a big solar storm burst out into space!" },
+  { text: "Pilot Arjun's radio crackled — space weather makes flying tricky." },
+  { text: "The sky lit up with beautiful green auroras." },
+  { text: "Scientists watched and warned astronauts to stay safe." },
+  { text: "Everything cleared, and the world smiled again!" }
+];
+
+// Animation objects
+const sun = { x: canvas.width/2, y: 150, r: 50 };
+const plane = { x: -100, y: 250, w: 80, h: 20 };
+const aurora = { alpha: 0 };
+let currentScene = 0;
+let animationInterval;
+
+// Functions
+function updateSubtitle(text){
+  subtitleBox.textContent = text;
+}
+
+function speak(text){
+  if(!ttsToggle.checked) return;
+  const u = new SpeechSynthesisUtterance(text);
+  u.rate = 0.95;
+  synth.speak(u);
+}
+
+function drawScene(sceneIndex){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+
+  // Draw Sun
+  ctx.beginPath();
+  ctx.arc(sun.x, sun.y, sun.r, 0, Math.PI*2);
+  ctx.fillStyle = "yellow";
+  ctx.fill();
+  ctx.closePath();
+
+  // Animate based on scene
+  switch(sceneIndex){
+    case 1: // Solar storm: Sun pulses
+      sun.r = 50 + Math.sin(Date.now()/200)*10;
+      break;
+    case 2: // Plane appears
+      plane.x += 3;
+      ctx.fillStyle = "white";
+      ctx.fillRect(plane.x, plane.y, plane.w, plane.h);
+      break;
+    case 3: // Aurora
+      aurora.alpha = Math.abs(Math.sin(Date.now()/500));
+      ctx.fillStyle = `rgba(0,255,0,${aurora.alpha})`;
+      ctx.fillRect(0,200,canvas.width,150);
+      ctx.fillStyle = `rgba(128,0,255,${aurora.alpha})`;
+      ctx.fillRect(0,220,canvas.width,150);
+      break;
+    case 4: // Scientists: blinking satellites
+      ctx.fillStyle = "silver";
+      for(let i=0;i<5;i++){
+        ctx.fillRect(50+i*150,100 + Math.sin(Date.now()/200+i)*20,10,10);
+      }
+      break;
+    default: break;
+  }
+}
+
+function playAnimation(){
+  if(animationInterval) clearInterval(animationInterval);
+  animationInterval = setInterval(()=>{
+    drawScene(currentScene);
+  }, 30);
+}
+
+document.getElementById("playBtn").addEventListener("click", ()=>{
+  currentScene = 0;
+  playAnimation();
+  let i = 0;
+  function next(){
+    if(i >= scenes.length) {
+      updateSubtitle("The End 🌞");
+      return;
+    }
+    const s = scenes[i];
+    currentScene = i;
+    updateSubtitle(s.text);
+    speak(s.text);
+    i++;
+    setTimeout(next, 5000);
+  }
+  next();
+});
+
+document.getElementById("pauseBtn").addEventListener("click", ()=>{
+  synth.cancel();
+  clearInterval(animationInterval);
+  updateSubtitle("Paused ⏸️");
+});
+
+document.getElementById("restartBtn").addEventListener("click", ()=>{
+  synth.cancel();
+  clearInterval(animationInterval);
+  currentScene = 0;
+  updateSubtitle("Restarted 🔄");
+});
+
+document.querySelectorAll(".perspective-btn").forEach(btn=>{
+  btn.addEventListener("click", ()=>{
+    document.querySelectorAll(".perspective-btn").forEach(b=>b.classList.remove("active"));
+    btn.classList.add("active");
+    currentPerspective = btn.dataset.perspective;
+    updateSubtitle(`Perspective set to: ${btn.textContent}`);
+  });
+});
+</script>
+</body>
+</html>
