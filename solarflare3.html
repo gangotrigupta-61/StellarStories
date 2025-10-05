@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sunny's Journey: A Solar Storm Adventure</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #0a0a2a;
+            color: #ffffff;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            padding: 30px 0;
+            background: linear-gradient(to right, #1a237e, #4a148c);
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 0 20px rgba(103, 58, 183, 0.5);
+        }
+        
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        }
+        
+        .subtitle {
+            font-size: 1.4rem;
+            color: #bb86fc;
+            margin-bottom: 20px;
+        }
+        
+        .scene-container {
+            position: relative;
+            width: 100%;
+            height: 500px;
+            background-color: #000033;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 30px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+        }
+        
+        .video-container {
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+        
+        #solarVideo {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .video-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .video-overlay:hover {
+            opacity: 1;
+        }
+        
+        .video-controls {
+            background: rgba(0, 0, 0, 0.7);
+            padding: 15px 25px;
+            border-radius: 30px;
+            display: flex;
+            gap: 15px;
+        }
+        
+        .video-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .video-btn:hover {
+            color: #bb86fc;
+            transform: scale(1.1);
+        }
+        
+        .narration-box {
+            background-color: rgba(10, 10, 40, 0.85);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border-left: 5px solid #bb86fc;
+            box-shadow: 0 0 10px rgba(187, 134, 252, 0.3);
+        }
+        
+        .narration-text {
+            font-size: 1.2rem;
+            line-height: 1.6;
+            color: #e0e0e0;
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        button {
+            padding: 12px 25px;
+            background: linear-gradient(to right, #1a237e, #4a148c);
+            color: white;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 10px rgba(103, 58, 183, 0.5);
+        }
+        
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(103, 58, 183, 0.7);
+        }
+        
+        button:active {
+            transform: translateY(1px);
+        }
+        
+        .btn a {
+            color: white;
+            text-decoration: none;
+            display: inline-block;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .info-panel {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+        
+        .info-card {
+            background-color: rgba(30, 30, 60, 0.7);
+            padding: 20px;
+            border-radius: 10px;
+            border-top: 4px solid #bb86fc;
+        }
+        
+        .info-card h3 {
+            color: #bb86fc;
+            margin-bottom: 15px;
+            font-size: 1.4rem;
+        }
+        
+        .info-card p {
+            margin-bottom: 15px;
+        }
+        
+        .data-visualization {
+            margin-top: 40px;
+            background-color: rgba(30, 30, 60, 0.7);
+            padding: 20px;
+            border-radius: 10px;
+        }
+        
+        .data-visualization h2 {
+            color: #bb86fc;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .data-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        
+        .data-item {
+            background-color: rgba(40, 40, 80, 0.8);
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        
+        .data-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #bb86fc;
+            margin: 10px 0;
+        }
+        
+        .data-label {
+            font-size: 0.9rem;
+            color: #b0b0b0;
+        }
+        
+        .scene-indicator {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+            gap: 10px;
+        }
+        
+        .scene-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: #3a3a6a;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .scene-dot.active {
+            background-color: #bb86fc;
+            transform: scale(1.2);
+        }
+        
+        .back-button-container {
+            text-align: center;
+            margin: 30px 0;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            color: #b0b0b0;
+            font-size: 0.9rem;
+            border-top: 1px solid #3a3a6a;
+        }
+        
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .subtitle {
+                font-size: 1.1rem;
+            }
+            
+            .scene-container {
+                height: 400px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Sunny's Journey: A Solar Storm Adventure</h1>
+            <div class="subtitle">Follow a Coronal Mass Ejection from the Sun to Earth</div>
+        </header>
+        
+        <div class="scene-container">
+            <div class="video-container">
+                <video id="solarVideo" preload="metadata">
+                    <!-- Replace with your actual solar storm video -->
+                    <source src="Sequence 01.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+                <div class="video-overlay">
+                    <div class="video-controls">
+                        <button class="video-btn" id="playPauseBtn">⏯️</button>
+                        <button class="video-btn" id="muteBtn">🔊</button>
+                        <button class="video-btn" id="fullscreenBtn">⛶</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="narration-box">
+            <div class="narration-text" id="narration">
+                Hey there! I'm Sunny, and I live on the Sun! Not in it, of course, it's way too hot. I'm actually a tiny burst of energy, way up high in the Sun's atmosphere, called the corona.
+            </div>
+        </div>
+        
+        <div class="controls">
+            <button id="prevBtn">Previous</button>
+            <button id="playBtn">Play</button>
+            <button id="nextBtn">Next</button>
+            <button id="restartBtn">Restart</button>
+        </div>
+        
+        <div class="scene-indicator">
+            <div class="scene-dot active" data-scene="0"></div>
+            <div class="scene-dot" data-scene="1"></div>
+            <div class="scene-dot" data-scene="2"></div>
+            <div class="scene-dot" data-scene="3"></div>
+            <div class="scene-dot" data-scene="4"></div>
+            <div class="scene-dot" data-scene="5"></div>
+            <div class="scene-dot" data-scene="6"></div>
+        </div>
+        
+        <div class="info-panel">
+            <div class="info-card">
+                <h3>What is a CME?</h3>
+                <p>Coronal Mass Ejections (CMEs) are massive bursts of solar wind and magnetic fields rising above the solar corona or being released into space.</p>
+                <p>They can eject billions of tons of coronal material and carry an embedded magnetic field that is stronger than the background solar wind.</p>
+            </div>
+            <div class="info-card">
+                <h3>Effects on Earth</h3>
+                <p>When a CME hits Earth, it can cause geomagnetic storms that may disrupt power grids, satellite communications, and navigation systems.</p>
+                <p>On the positive side, CMEs create beautiful auroras (Northern and Southern Lights) when charged particles interact with Earth's atmosphere.</p>
+            </div>
+            <div class="info-card">
+                <h3>Space Weather</h3>
+                <p>Space weather refers to the environmental conditions in space as influenced by the Sun and solar wind.</p>
+                <p>Scientists monitor space weather to predict solar storms and protect our technology infrastructure.</p>
+            </div>
+        </div>
+        
+        <div class="data-visualization">
+            <h2>Solar Storm Data (NASA)</h2>
+            <div class="data-grid">
+                <div class="data-item">
+                    <div class="data-label">CME Speed</div>
+                    <div class="data-value" id="cmeSpeed">2,000 km/s</div>
+                    <div class="data-label">(Carrington Event: ~2,000 km/s)</div>
+                </div>
+                <div class="data-item">
+                    <div class="data-label">Travel Time to Earth</div>
+                    <div class="data-value" id="travelTime">17.6 hours</div>
+                    <div class="data-label">(Fastest recorded: 14.6 hours)</div>
+                </div>
+                <div class="data-item">
+                    <div class="data-label">Energy Released</div>
+                    <div class="data-value" id="energy">10²⁵ J</div>
+                    <div class="data-label">(Equivalent to 10 million volcanoes)</div>
+                </div>
+                <div class="data-item">
+                    <div class="data-label">Frequency</div>
+                    <div class="data-value" id="frequency">~100/year</div>
+                    <div class="data-label">(During solar maximum)</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="back-button-container">
+            <button class="btn"><a href="selection.html">Back</a></button>
+        </div>
+        
+        <footer>
+            <p>Educational Visualization of Coronal Mass Ejections | Created for Students</p>
+            <p>Data sources: NASA, NOAA Space Weather Prediction Center</p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Elements
+            const narrationElement = document.getElementById('narration');
+            const playBtn = document.getElementById('playBtn');
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const restartBtn = document.getElementById('restartBtn');
+            const sceneDots = document.querySelectorAll('.scene-dot');
+            
+            // Video elements
+            const videoElement = document.getElementById('solarVideo');
+            const playPauseBtn = document.getElementById('playPauseBtn');
+            const muteBtn = document.getElementById('muteBtn');
+            const fullscreenBtn = document.getElementById('fullscreenBtn');
+            
+            // Data visualization elements
+            const cmeSpeedElement = document.getElementById('cmeSpeed');
+            const travelTimeElement = document.getElementById('travelTime');
+            const energyElement = document.getElementById('energy');
+            const frequencyElement = document.getElementById('frequency');
+            
+            // Scene data
+            const scenes = [
+                {
+                    narration: "Far, far away… in the middle of our solar system… lives the bright and powerful Sun!  Hi there! I’m Sunny Flare! I’m a tiny spark from the Sun, full of light and energy! Sometimes I get so excited that I shoot out into space — BOOM!",
+                    data: {
+                        cmeSpeed: "0 km/s",
+                        travelTime: "0 hours",
+                        energy: "0 J",
+                        frequency: "~100/year"
+                    }
+                },
+                {
+                    narration: "The Sun isn’t always calm. Sometimes, it has magnetic storms inside.That’s when my friends — the Solar Wind and CME — fly out with me! Wheee! Sunny, go explore the universe and say hello to Earth! Yippee! Thank you, Sun! Here I goooo!",
+                    data: {
+                        cmeSpeed: "500 km/s",
+                        travelTime: "3-4 days",
+                        energy: "10²³ J",
+                        frequency: "~100/year"
+                    }
+                },
+                {
+                    narration: "Go, Sunny, go! You’re glowing beautifully!  Hello, little Sunny! You’re shining so bright today! Wow! Look at Earth! She’s so beautiful! Sunny’s energy touched Earth’s magnetic shield. Pilots heard strange noises, farmers’ GPS blinked, and astronauts stayed safe inside their station.",
+                    data: {
+                        cmeSpeed: "1,000 km/s",
+                        travelTime: "2 days",
+                        energy: "10²⁴ J",
+                        frequency: "~100/year"
+                    }
+                },
+                {
+                    narration: "Oh wow… I made the sky dance!Look! The Northern Lights! So beautiful! NASA calls this the Aurora Borealis — a gift from the Sun to Earth.",
+                    data: {
+                        cmeSpeed: "1,500 km/s",
+                        travelTime: "1.5 days",
+                        energy: "10²⁴ J",
+                        frequency: "~100/year"
+                    }
+                },
+                {
+                    narration: "NASA’s satellites — SOHO, Parker Solar Probe, and SDO — were watching Sunny the whole time. They study her journey to help people stay safe.",
+                    data: {
+                        cmeSpeed: "2,000 km/s",
+                        travelTime: "1 day",
+                        energy: "10²⁵ J",
+                        frequency: "~100/year"
+                    }
+                },
+                {
+                    narration: "They’re watching me? Wow! I’ve learned something today. Even though I’m full of energy, I must be gentle.",
+                    data: {
+                        cmeSpeed: "2,000 km/s",
+                        travelTime: "17.6 hours",
+                        energy: "10²⁵ J",
+                        frequency: "~100/year"
+                    }
+                },
+                {
+                    narration: "Your light brings both warmth and wonder. So Sunny Flare kept shining — with love, care, and kindness.Even the tiniest spark can make a big difference. MORAL:Shine bright always with kindness, just like Sunny Flare!",
+                    data: {
+                        cmeSpeed: "2,000 km/s",
+                        travelTime: "17.6 hours",
+                        energy: "10²⁵ J",
+                        frequency: "~100/year"
+                    }
+                }
+            ];
+            
+            let currentScene = 0;
+            let isPlaying = false;
+            let playInterval;
+            
+            // Initialize
+            updateScene();
+            
+            // Event listeners
+            playBtn.addEventListener('click', togglePlay);
+            prevBtn.addEventListener('click', prevScene);
+            nextBtn.addEventListener('click', nextScene);
+            restartBtn.addEventListener('click', restart);
+            
+            sceneDots.forEach(dot => {
+                dot.addEventListener('click', function() {
+                    const sceneIndex = parseInt(this.getAttribute('data-scene'));
+                    goToScene(sceneIndex);
+                });
+            });
+            
+            // Video controls
+            playPauseBtn.addEventListener('click', toggleVideoPlay);
+            muteBtn.addEventListener('click', toggleMute);
+            fullscreenBtn.addEventListener('click', toggleFullscreen);
+            
+            // Functions
+            function togglePlay() {
+                if (isPlaying) {
+                    pauseAnimation();
+                } else {
+                    playAnimation();
+                }
+            }
+            
+            function playAnimation() {
+                isPlaying = true;
+                playBtn.textContent = "Pause";
+                videoElement.play();
+                playInterval = setInterval(() => {
+                    if (currentScene < scenes.length - 1) {
+                        nextScene();
+                    } else {
+                        pauseAnimation();
+                    }
+                }, 500000); // Change scene every 500 seconds
+            }
+            
+            function pauseAnimation() {
+                isPlaying = false;
+                playBtn.textContent = "Play";
+                videoElement.pause();
+                clearInterval(playInterval);
+            }
+            
+            function prevScene() {
+                if (currentScene > 0) {
+                    goToScene(currentScene - 1);
+                }
+            }
+            
+            function nextScene() {
+                if (currentScene < scenes.length - 1) {
+                    goToScene(currentScene + 1);
+                }
+            }
+            
+            function goToScene(sceneIndex) {
+                currentScene = sceneIndex;
+                updateScene();
+            }
+            
+            function restart() {
+                pauseAnimation();
+                goToScene(0);
+                videoElement.currentTime = 0;
+            }
+            
+            function updateScene() {
+                const scene = scenes[currentScene];
+                narrationElement.textContent = scene.narration;
+                
+                // Update data visualization
+                cmeSpeedElement.textContent = scene.data.cmeSpeed;
+                travelTimeElement.textContent = scene.data.travelTime;
+                energyElement.textContent = scene.data.energy;
+                frequencyElement.textContent = scene.data.frequency;
+                
+                // Update scene indicator
+                sceneDots.forEach((dot, index) => {
+                    if (index === currentScene) {
+                        dot.classList.add('active');
+                    } else {
+                        dot.classList.remove('active');
+                    }
+                });
+            }
+            
+            // Video control functions
+            function toggleVideoPlay() {
+                if (videoElement.paused) {
+                    videoElement.play();
+                    playPauseBtn.textContent = "⏸️";
+                    if (!isPlaying) {
+                        playAnimation();
+                    }
+                } else {
+                    videoElement.pause();
+                    playPauseBtn.textContent = "⏯️";
+                    if (isPlaying) {
+                        pauseAnimation();
+                    }
+                }
+            }
+            
+            function toggleMute() {
+                if (videoElement.muted) {
+                    videoElement.muted = false;
+                    muteBtn.textContent = "🔊";
+                } else {
+                    videoElement.muted = true;
+                    muteBtn.textContent = "🔇";
+                }
+            }
+            
+            function toggleFullscreen() {
+                if (!document.fullscreenElement) {
+                    videoElement.requestFullscreen().catch(err => {
+                        console.log(`Error attempting to enable fullscreen: ${err.message}`);
+                    });
+                } else {
+                    document.exitFullscreen();
+                }
+            }
+            
+            // Update video controls when video is played/paused by other means
+            videoElement.addEventListener('play', function() {
+                playPauseBtn.textContent = "⏸️";
+            });
+            
+            videoElement.addEventListener('pause', function() {
+                playPauseBtn.textContent = "⏯️";
+            });
+            
+            // Update NASA data with real information
+            function updateNASAData() {
+                // This would typically fetch data from a NASA API
+                // For now, we'll use static data based on real events
+                
+                // Carrington Event (1859) - the most powerful solar storm on record
+                const carringtonData = {
+                    cmeSpeed: "2,000 km/s",
+                    travelTime: "17.6 hours",
+                    energy: "10²⁵ J",
+                    frequency: "~100/year"
+                };
+                
+                // Update the final scene with Carrington Event data
+                scenes[scenes.length - 1].data = carringtonData;
+                scenes[scenes.length - 2].data = carringtonData;
+                
+                // Update the data visualization
+                if (currentScene >= scenes.length - 2) {
+                    updateScene();
+                }
+            }
+            
+            // Initialize NASA data
+            updateNASAData();
+        });
+    </script>
+</body>
+</html>
