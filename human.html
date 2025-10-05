@@ -329,9 +329,9 @@ function drawScene(sceneIndex){
       break;
     case 3: // Aurora
       aurora.alpha = Math.abs(Math.sin(Date.now()/500));
-      ctx.fillStyle = rgba(0,255,0,${aurora.alpha});
+      ctx.fillStyle = `rgba(0,255,0,${aurora.alpha})`;
       ctx.fillRect(0,200,canvas.width,150);
-      ctx.fillStyle = rgba(128,0,255,${aurora.alpha});
+      ctx.fillStyle = `rgba(128,0,255,${aurora.alpha})`;
       ctx.fillRect(0,220,canvas.width,150);
       break;
     case 4: // Scientists: blinking satellites
@@ -414,7 +414,7 @@ document.getElementById("playBtn").addEventListener("click", ()=>{
   } else {
     // Play video for selected perspective
     playVideoForPerspective(currentPerspective);
-    updateSubtitle(Playing from ${currentPerspective} perspective);
+    updateSubtitle(`Playing from ${currentPerspective} perspective`);
   }
 });
 
@@ -430,7 +430,7 @@ document.getElementById("pauseBtn").addEventListener("click", ()=>{
     case 'farmer': farmerVideo.pause(); break;
   }
   
-  updateSubtitle("Paused ⏸");
+  updateSubtitle("Paused ⏸️");
 });
 
 document.getElementById("restartBtn").addEventListener("click", ()=>{
@@ -480,7 +480,7 @@ document.querySelectorAll(".perspective-btn").forEach(btn=>{
       canvas.style.display = 'none';
     }
     
-    updateSubtitle(Perspective set to: ${btn.textContent});
+    updateSubtitle(`Perspective set to: ${btn.textContent}`);
   });
 });
 
