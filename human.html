@@ -58,10 +58,11 @@ h1 {
   overflow: hidden;
 }
 
-canvas {
+canvas, video {
   display: block;
   width: 100%;
   height: 100%;
+  object-fit: cover;
 }
 
 /* ===== Overlay ===== */
@@ -168,6 +169,18 @@ footer {
   text-align: center;
   font-size: 0.85rem;
 }
+
+/* ===== Video Styles ===== */
+.video-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: none;
+}
+
+.video-container.active {
+  display: block;
+}
 </style>
 </head>
 <body>
@@ -175,12 +188,42 @@ footer {
 <div class="container">
   <header>
     <h1>When the Sun Talks ✨ — Animated Story</h1>
-    <div class="meta">Duration: ~2m20s · Interactive animated “video”</div>
+    <div class="meta">Duration: ~2m20s · Interactive animated "video"</div>
   </header>
 
   <div class="player">
     <div class="stage" id="stage">
       <canvas id="scene"></canvas>
+      
+      <!-- Video elements for different perspectives -->
+      <div class="video-container" id="videoNarrator">
+        <video id="narratorVideo" preload="metadata">
+          <source src="/narrator.mp4" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+      </div>
+      
+      <div class="video-container" id="videoPilot">
+        <video id="pilotVideo" preload="metadata">
+          <source src="/farmer.mp4" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+      </div>
+      
+      <div class="video-container" id="videoAstronaut">
+        <video id="astronautVideo" preload="metadata">
+          <source src="https://assets.codepen.io/4926193/astronaut-perspective.mp4" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+      </div>
+      
+      <div class="video-container" id="videoFarmer">
+        <video id="farmerVideo" preload="metadata">
+          <source src="https://assets.codepen.io/4926193/farmer-perspective.mp4" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+      </div>
+      
       <div class="overlay">
         <div class="subtitle" id="subtitle">Press Play to start the story — the Sun might sneeze!</div>
         <div class="controls">
@@ -197,24 +240,14 @@ footer {
     <div class="perspective-box">
       <div class="perspective-title">Choose Perspective:</div>
       <div class="perspective-options">
-        <button class="perspective-btn active" data-perspective="default">👩‍🏫 Narrator</button>
+        <button class="perspective-btn active" data-perspective="narrator">👩‍🏫 Narrator</button>
         <button class="perspective-btn" data-perspective="pilot">✈️ Pilot</button>
         <button class="perspective-btn" data-perspective="astronaut">👨‍🚀 Astronaut</button>
         <button class="perspective-btn" data-perspective="farmer">🌾 Farmer</button>
       </div>
     </div>
 
-    <div class="script-area">
-      <strong>Story Script:</strong>
-      <ol>
-        <li>Intro: Aanya greets — Sun speaks.</li>
-        <li>Sun sneezes — a solar storm begins.</li>
-        <li>Plane trouble — Pilot Arjun’s radio crackles.</li>
-        <li>Aurora — the sky glows green and purple.</li>
-        <li>Scientists — work to protect satellites.</li>
-        <li>Happy ending — teamwork saves the day.</li>
-      </ol>
-    </div>
+    
   </div>
 
   <footer>
@@ -231,10 +264,22 @@ canvas.height = canvas.clientHeight;
 const subtitleBox = document.getElementById("subtitle");
 const ttsToggle = document.getElementById("ttsToggle");
 const synth = window.speechSynthesis;
-let currentPerspective = "default";
+let currentPerspective = "narrator";
+
+// Video elements
+const narratorVideo = document.getElementById("narratorVideo");
+const pilotVideo = document.getElementById("pilotVideo");
+const astronautVideo = document.getElementById("astronautVideo");
+const farmerVideo = document.getElementById("farmerVideo");
+
+// Video containers
+const videoNarrator = document.getElementById("videoNarrator");
+const videoPilot = document.getElementById("videoPilot");
+const videoAstronaut = document.getElementById("videoAstronaut");
+const videoFarmer = document.getElementById("videoFarmer");
 
 const scenes = [
-  { text: "Hi, I’m Aanya! One day I heard a golden voice whisper from the Sun..." },
+  { text: "Hi, I'm Aanya! One day I heard a golden voice whisper from the Sun..." },
   { text: "Aaaachooo! The Sun sneezed — a big solar storm burst out into space!" },
   { text: "Pilot Arjun's radio crackled — space weather makes flying tricky." },
   { text: "The sky lit up with beautiful green auroras." },
@@ -305,36 +350,115 @@ function playAnimation(){
   }, 30);
 }
 
-document.getElementById("playBtn").addEventListener("click", ()=>{
-  currentScene = 0;
-  playAnimation();
-  let i = 0;
-  function next(){
-    if(i >= scenes.length) {
-      updateSubtitle("The End 🌞");
-      return;
-    }
-    const s = scenes[i];
-    currentScene = i;
-    updateSubtitle(s.text);
-    speak(s.text);
-    i++;
-    setTimeout(next, 5000);
+function playVideoForPerspective(perspective) {
+  // Pause all videos
+  narratorVideo.pause();
+  pilotVideo.pause();
+  astronautVideo.pause();
+  farmerVideo.pause();
+  
+  // Hide all video containers
+  videoNarrator.classList.remove('active');
+  videoPilot.classList.remove('active');
+  videoAstronaut.classList.remove('active');
+  videoFarmer.classList.remove('active');
+  
+  // Hide canvas
+  canvas.style.display = 'none';
+  
+  // Play video for selected perspective
+  switch(perspective) {
+    case 'narrator':
+      videoNarrator.classList.add('active');
+      narratorVideo.currentTime = 0;
+      narratorVideo.play();
+      break;
+    case 'pilot':
+      videoPilot.classList.add('active');
+      pilotVideo.currentTime = 0;
+      pilotVideo.play();
+      break;
+    case 'astronaut':
+      videoAstronaut.classList.add('active');
+      astronautVideo.currentTime = 0;
+      astronautVideo.play();
+      break;
+    case 'farmer':
+      videoFarmer.classList.add('active');
+      farmerVideo.currentTime = 0;
+      farmerVideo.play();
+      break;
   }
-  next();
+}
+
+document.getElementById("playBtn").addEventListener("click", ()=>{
+  if (currentPerspective === 'default') {
+    // Original animation
+    currentScene = 0;
+    playAnimation();
+    let i = 0;
+    function next(){
+      if(i >= scenes.length) {
+        updateSubtitle("The End 🌞");
+        return;
+      }
+      const s = scenes[i];
+      currentScene = i;
+      updateSubtitle(s.text);
+      speak(s.text);
+      i++;
+      setTimeout(next, 5000);
+    }
+    next();
+  } else {
+    // Play video for selected perspective
+    playVideoForPerspective(currentPerspective);
+    updateSubtitle(`Playing from ${currentPerspective} perspective`);
+  }
 });
 
 document.getElementById("pauseBtn").addEventListener("click", ()=>{
   synth.cancel();
   clearInterval(animationInterval);
+  
+  // Pause current video
+  switch(currentPerspective) {
+    case 'narrator': narratorVideo.pause(); break;
+    case 'pilot': pilotVideo.pause(); break;
+    case 'astronaut': astronautVideo.pause(); break;
+    case 'farmer': farmerVideo.pause(); break;
+  }
+  
   updateSubtitle("Paused ⏸️");
 });
 
 document.getElementById("restartBtn").addEventListener("click", ()=>{
   synth.cancel();
   clearInterval(animationInterval);
-  currentScene = 0;
-  updateSubtitle("Restarted 🔄");
+  
+  // Reset and restart current video
+  switch(currentPerspective) {
+    case 'narrator': 
+      narratorVideo.currentTime = 0;
+      narratorVideo.play();
+      break;
+    case 'pilot': 
+      pilotVideo.currentTime = 0;
+      pilotVideo.play();
+      break;
+    case 'astronaut': 
+      astronautVideo.currentTime = 0;
+      astronautVideo.play();
+      break;
+    case 'farmer': 
+      farmerVideo.currentTime = 0;
+      farmerVideo.play();
+      break;
+    default:
+      currentScene = 0;
+      updateSubtitle("Restarted 🔄");
+      break;
+  }
 });
 
 document.querySelectorAll(".perspective-btn").forEach(btn=>{
@@ -342,7 +466,27 @@ document.querySelectorAll(".perspective-btn").forEach(btn=>{
     document.querySelectorAll(".perspective-btn").forEach(b=>b.classList.remove("active"));
     btn.classList.add("active");
     currentPerspective = btn.dataset.perspective;
+    
+    // Show canvas for default perspective, hide for others
+    if (currentPerspective === 'default') {
+      canvas.style.display = 'block';
+      // Hide all video containers
+      videoNarrator.classList.remove('active');
+      videoPilot.classList.remove('active');
+      videoAstronaut.classList.remove('active');
+      videoFarmer.classList.remove('active');
+    } else {
+      canvas.style.display = 'none';
+    }
+    
     updateSubtitle(`Perspective set to: ${btn.textContent}`);
+  });
+});
+
+// Set up video event listeners
+[narratorVideo, pilotVideo, astronautVideo, farmerVideo].forEach(video => {
+  video.addEventListener('ended', () => {
+    updateSubtitle('Video ended. Select a new perspective or restart.');
   });
 });
 </script>
